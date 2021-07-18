@@ -4,7 +4,7 @@ from src.users.schemas import UserSchema
 from src.users.models import User
 from src.utils.helpers import get_response_obj
 from sqlalchemy.exc import SQLAlchemyError
-from app import db
+from src.common.models import db
 
 
 class UserResource(Resource):
@@ -34,15 +34,13 @@ class CreateUserResource(Resource):
                 error=e.messages,
             ), 422
         try:
-            session = db.session()
-            session.add(user)
-            session.commit()
+            user.add()
         except SQLAlchemyError as e:
             current_app.logger.exception("Error creating user")
             return (
                 get_response_obj(
                     "Error creating user, Server error",
-                    error="Server errro",
+                    error="Server error",
                 ),
                 500,
             )
