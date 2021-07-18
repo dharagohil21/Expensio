@@ -19,6 +19,7 @@ app.add_url_rule("/", "helloworld", hello_world, methods=["GET", "POST"])
 # register blueprint routes
 from src import routes
 app.register_blueprint(routes.user_bp, url_prefix="/users")
+app.register_blueprint(routes.expense_bp, url_prefix="/expense")
 
 if __name__ == "__main__":
     app.run()
