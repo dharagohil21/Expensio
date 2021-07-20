@@ -57,6 +57,42 @@ class CreateUserResource(Resource):
             200,
         )
 
+    def put(self, user_id):
+        user_schema = UserSchema()
+        try:
+            update_user = user_schema.load(request.json or {}, session=db.session(), partial=True)
+        except ValidationError as e:
+            return get_response_obj(
+                "Cannot create user. Invalid request data",
+                error=e.messages,
+            ), 422
+
+        user = User.query.get(user_id)
+        if update_user.name != user.name:
+            user.name = update_user.name
+        if update_user.email != user.email:
+            user.email = update_user.email
+        if sha1(update_user.password).hexdigest() != user.password:
+            user.password = sha1(update_user.password).hexdigest()
+
+        try:
+            user.update()
+        except SQLAlchemyError as e:
+            current_app.logger.exception("Error updating user")
+            return (
+                get_response_obj(
+                    "Error creating user, Server error",
+                    error="Server error",
+                ),
+                500,
+            )
+
+        return (
+            get_response_obj("User updated", data=user_schema.dump(user)),
+            200,
+        )
+
+
 class LoginResource(Resource):
 
     def post(self):
