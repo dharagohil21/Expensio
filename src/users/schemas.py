@@ -1,5 +1,5 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
-from marshmallow import fields
+from marshmallow import Schema, fields
 from src.users.models import User
 
 class UserSchema(SQLAlchemyAutoSchema):
@@ -11,3 +11,7 @@ class UserSchema(SQLAlchemyAutoSchema):
         include_relationships = False
         include_fk = True
         load_instance = True
+
+class LoginSchema(Schema):
+    email = fields.String(required=True)
+    password = fields.String(required=True)
