@@ -55,15 +55,14 @@ class ExpenseListResource(AuthResource):
 
     def get(self):
         current_user = g.current_user
+        expense_schema = ExpenseSchema()
         try:
-            req_args = ExpenseListSchema().dump(request.params or {})
+            req_args = ExpenseListSchema().load(request.args or {})
         except ValidationError as e:
             current_app.logger.exception("Invalid request params")
             return get_response_obj("Invalid request params", error=e.messages), 422
         expenses = Expense.query.filter_by(user_id=current_user.id).all()
-        expense_schema = ExpenseSchema(expenses)
-
         return (
-            get_response_obj("expense list", data=expense_schema.dump(expenses)),
+            get_response_obj("expense list", data=expense_schema.dump(expenses, many=True)),
             200,
         )
