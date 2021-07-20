@@ -15,12 +15,29 @@ class ExpenseResource(Resource):
         expense = Expense.query.filter_by(id=expense_id).first()
         expense_schema = ExpenseSchema()
         if not expense:
-            return get_response_obj("No expenses found for the user", error="No expense"), 404
+            return get_response_obj("No expenses found", error="No expense with given id"), 404
 
         return (
             get_response_obj("expense data", data=expense_schema.dump(expense)),
             200,
         )
+
+    def delete(self, expense_id):
+        expense = Expense.query.get(expense_id)
+
+        if not expense:
+            return get_response_obj("No expenses found", error="No expense with given id"), 404
+
+        try:
+            expense.delete()
+        except SQLAlchemyError as e:
+            current_app.logger.exception("Error deleting expense")
+            return get_response_obj(
+                "Server error while deleting expense",
+                error="Database error",
+            ), 500
+
+        return get_response_obj("Expense deleted", data=None), 200
 
 
 class ExpenseListResource(AuthResource):
