@@ -4,7 +4,7 @@ from src.expense.models import Expense
 from datetime import date
 
 class ExpenseSchema(SQLAlchemyAutoSchema):
-    expense_id = fields.Integer(dump_only=True)
+    id = fields.Integer(dump_only=True)
     date = fields.Date(required=True)
     user_id = fields.Integer(dump_only=True)
 

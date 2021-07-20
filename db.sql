@@ -15,7 +15,7 @@ CREATE TABLE `expense` (
   `is_recurring` TINYINT NOT NULL DEFAULT 0,
   `date` DATE NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `user_id`
-    FOREIGN KEY (`id`)
+  CONSTRAINT `user_id_fk`
+    FOREIGN KEY (`user_id`)
     REFERENCES `user` (`id`)
 );
