@@ -1,9 +1,15 @@
+"""
+Author: Sravani Pinninti
+"""
+from datetime import date, timedelta
+from dateutil.rrule import rrule, MONTHLY
 from marshmallow import ValidationError
 from flask import g
 from flask_restful import Resource, request, current_app
 from src.expense.schemas import ExpenseSchema, ExpenseListSchema
 from src.expense.models import Expense
 from src.utils.helpers import get_response_obj
+from sqlalchemy import and_
 from sqlalchemy.exc import SQLAlchemyError
 from src.common.models import db
 from src.auth.api import AuthResource
@@ -78,7 +84,22 @@ class ExpenseListResource(AuthResource):
         except ValidationError as e:
             current_app.logger.exception("Invalid request params")
             return get_response_obj("Invalid request params", error=e.messages), 422
-        expenses = Expense.query.filter_by(user_id=current_user.id).all()
+
+        start_date = date(req_args["date"].year, req_args["date"].month, 1)
+        next_month_date = rrule(freq=MONTHLY, count=2, dtstart=start_date)[1]
+        end_date = date(next_month_date.year, next_month_date.month, 1)
+        current_app.logger.info("Listing expense from %s to %s", start_date, end_date)
+
+        expenses = (
+            Expense.query.filter_by(user_id=current_user.id)
+            .filter(
+                and_(
+                    Expense.date >= start_date,
+                    Expense.date < end_date
+                )
+            )
+            .all()
+        )
         return (
             get_response_obj("expense list", data=expense_schema.dump(expenses, many=True)),
             200,

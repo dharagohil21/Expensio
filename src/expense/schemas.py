@@ -5,7 +5,7 @@ from datetime import date
 
 class ExpenseSchema(SQLAlchemyAutoSchema):
     id = fields.Integer(dump_only=True)
-    date = fields.Date(required=True)
+    date = fields.Date(missing=date.today)
     user_id = fields.Integer(dump_only=True)
 
     class Meta:
