@@ -181,7 +181,7 @@ class IncomeListResource(AuthResource):
                         e for e in current_month_income
                         if e.amount == inc.amount
                         and e.income_category == inc.income_category
-                        and e.is_recurring is True
+                        and e.title == inc.title
                     ),
                     None,
                 )
