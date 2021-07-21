@@ -37,6 +37,7 @@ class ExpenseResource(AuthResource):
         try:
             next_month_date = expense.date + relativedelta(months=1)
             next_month_start = date(next_month_date.year, next_month_date.month, 1)
+             # delete the future entires if the the income is recurring
             Expense.query.filter(
                 and_(
                     Expense.user_id == current_user.id,
@@ -80,11 +81,13 @@ class ExpenseResource(AuthResource):
         try:
             current_user = g.current_user
             if "is_recurring" in req_data and new_expense.is_recurring != expense.is_recurring:
+                # if is_recurring flag is being modified
                 expense.is_recurring = new_expense.is_recurring
                 if new_expense.is_recurring is False:
                     # when recurring flag is changed from true to false
                     next_month_date = expense.date + relativedelta(months=1)
                     next_month_start = date(next_month_date.year, next_month_date.month, 1)
+                    # delete the recurring entries of the expense entry from the future months
                     Expense.query.filter(
                         and_(
                             Expense.user_id == current_user.id,

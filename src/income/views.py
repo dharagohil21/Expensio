@@ -37,6 +37,7 @@ class IncomeResource(AuthResource):
         try:
             next_month_date = income.date + relativedelta(months=1)
             next_month_start = date(next_month_date.year, next_month_date.month, 1)
+            # delete the future entires if the the income is recurring
             Income.query.filter(
                 and_(
                     Income.user_id == current_user.id,
@@ -80,11 +81,13 @@ class IncomeResource(AuthResource):
         try:
             current_user = g.current_user
             if "is_recurring" in req_data and new_income.is_recurring != income.is_recurring:
+                # if is_recurring flag is being modified
                 income.is_recurring = new_income.is_recurring
                 if new_income.is_recurring is False:
                     # when recurring flag is changed from true to false
                     next_month_date = income.date + relativedelta(months=1)
                     next_month_start = date(next_month_date.year, next_month_date.month, 1)
+                    # delete the recurring entries of the income entry from the future months
                     Income.query.filter(
                         and_(
                             Income.user_id == current_user.id,

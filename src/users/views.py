@@ -67,13 +67,14 @@ class CreateUserResource(Resource):
                 error=e.messages,
             ), 422
 
+        # update user fields
         user = User.query.get(user_id)
         if update_user.name != user.name:
             user.name = update_user.name
         if update_user.email != user.email:
             user.email = update_user.email
         if sha1(update_user.password).hexdigest() != user.password:
-            user.password = sha1(update_user.password).hexdigest()
+            user.password = sha1(update_user.password).hexdigest() # hash the updated password
 
         try:
             user.update()
