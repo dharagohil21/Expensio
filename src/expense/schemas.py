@@ -1,3 +1,6 @@
+"""
+Author: Sravani Pinninti
+"""
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import fields, Schema
 from src.expense.models import Expense

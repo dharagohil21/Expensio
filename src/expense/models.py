@@ -1,3 +1,6 @@
+"""
+Author: Sravani Pinninti
+"""
 from src.common.models import BaseModel
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Float
 from sqlalchemy.dialects.mysql import DATE
