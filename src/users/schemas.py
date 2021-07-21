@@ -1,3 +1,6 @@
+"""
+Author: Rushikesh Patel
+"""
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import Schema, fields
 from src.users.models import User

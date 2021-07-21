@@ -1,3 +1,6 @@
+"""
+Author: Rushikesh Patel
+"""
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()

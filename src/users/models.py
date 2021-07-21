@@ -1,3 +1,6 @@
+"""
+Author: Rushikesh Patel
+"""
 from sqlalchemy import Column, Integer, String
 from src.common.models import BaseModel
 

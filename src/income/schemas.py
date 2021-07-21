@@ -1,5 +1,5 @@
 """
-Author: Nachiket Panchal
+Author: Nachiket Panchal, Rushikesh Patel
 """
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import fields, Schema
