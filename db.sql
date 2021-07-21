@@ -20,6 +20,11 @@ CREATE TABLE `expense` (
     REFERENCES `user` (`id`)
 );
 
+CREATE TABLE `expense_category` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id`));
+
 CREATE TABLE `income` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
