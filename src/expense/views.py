@@ -44,7 +44,7 @@ class ExpenseResource(AuthResource):
                     Expense.date >= next_month_start,
                     Expense.amount == expense.amount,
                     Expense.expense_category == expense.expense_category,
-                    Expense.is_recurring == True,
+                    Expense.title == expense.title,
                 )
             ).delete()
             expense.delete()
@@ -94,7 +94,7 @@ class ExpenseResource(AuthResource):
                             Expense.date >= next_month_start,
                             Expense.amount == expense.amount,
                             Expense.expense_category == expense.expense_category,
-                            Expense.is_recurring == True,
+                            Expense.title == expense.title,
                         )
                     ).delete()
             expense.update()
