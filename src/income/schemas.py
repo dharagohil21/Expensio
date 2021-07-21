@@ -3,7 +3,7 @@ Author: Nachiket Panchal
 """
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import fields, Schema
-from src.income.models import Income
+from src.income.models import Income, IncomeCategory
 from datetime import date
 
 class IncomeSchema(SQLAlchemyAutoSchema):
@@ -20,3 +20,13 @@ class IncomeSchema(SQLAlchemyAutoSchema):
 
 class IncomeListSchema(Schema):
     date = fields.Date(required=False, missing=date.today)
+
+
+class IncomeCategorySchema(SQLAlchemyAutoSchema):
+    id = fields.Integer(dump_only=True)
+
+    class Meta:
+        model = IncomeCategory
+        include_relationships = False
+        include_fk = True
+        load_instance = True

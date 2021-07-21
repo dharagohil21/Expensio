@@ -259,4 +259,4 @@ class ExpenseCategoryResource(AuthResource):
                 error="Database error",
             ), 500
 
-        return get_response_obj("Expense deleted", data=None ), 200
+        return get_response_obj("Expense category deleted", data=None ), 200

@@ -1,13 +1,13 @@
 """
-Author: Nachiket Panchal, Jaspreet Kaur Gill
+Author: Nachiket Panchal, Jaspreet Kaur Gill, Rushikesh Patel
 """
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 from marshmallow import ValidationError
 from flask import g
 from flask_restful import request, current_app
-from src.income.schemas import IncomeSchema, IncomeListSchema
-from src.income.models import Income
+from src.income.schemas import IncomeSchema, IncomeListSchema, IncomeCategorySchema
+from src.income.models import Income, IncomeCategory
 from src.utils.helpers import get_response_obj
 from sqlalchemy import and_
 from sqlalchemy.exc import SQLAlchemyError
@@ -210,3 +210,56 @@ class IncomeListResource(AuthResource):
             get_response_obj("income list", data=income_schema.dump(current_month_income, many=True)),
             200,
         )
+
+
+class IncomeCategoryListResource(AuthResource):
+
+    def get(self):
+        income_categories = IncomeCategory.query.all()
+        schema = IncomeCategorySchema()
+        return get_response_obj("Income categories", data=schema.dump(income_categories, many=True))
+
+    def post(self):
+        schema = IncomeCategorySchema()
+        try:
+            category = schema.load(request.json or {}, session=db.session)
+        except ValidationError as e:
+            return get_response_obj(
+                "Cannot create an income category. Invalid request data",
+                error=e.messages,
+            ), 422
+        try:
+            category.add()
+        except SQLAlchemyError as e:
+            current_app.logger.exception("Error creating income category")
+            return (
+                get_response_obj(
+                    "Error creating an income category, Server error",
+                    error="Server error",
+                ),
+                500,
+            )
+
+        return (
+            get_response_obj("Income category created", data=schema.dump(category)),
+            200,
+        )
+
+
+class IncomeCategoryResource(AuthResource):
+
+        def delete(self, category_id):
+            category = IncomeCategory.query.get(category_id)
+            if not category:
+                return get_response_obj("No income category found", error="No category with given id"), 404
+
+            try:
+                category.delete()
+            except SQLAlchemyError as e:
+                current_app.logger.exception("Error deleting income category")
+                return get_response_obj(
+                    "Server error while deleting income category",
+                    error="Database error",
+                ), 500
+
+            return get_response_obj("Income category deleted", data=None ), 200

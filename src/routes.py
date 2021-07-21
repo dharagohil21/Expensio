@@ -7,7 +7,12 @@ from src.expense.views import (
     ExpenseCategoryResource,
     ExpenseCategoryListResource,
 )
-from src.income.views import IncomeResource, IncomeListResource
+from src.income.views import (
+    IncomeResource,
+    IncomeListResource,
+    IncomeCategoryResource,
+    IncomeCategoryListResource,
+)
 
 # user api endpoints
 user_bp = Blueprint("user_bp", __name__)
@@ -29,3 +34,5 @@ income_bp = Blueprint("income_bp",__name__)
 income_api=Api(income_bp)
 income_api.add_resource(IncomeResource,"/<income_id>")
 income_api.add_resource(IncomeListResource, "")
+income_api.add_resource(IncomeCategoryListResource, "/category")
+income_api.add_resource(IncomeCategoryResource, "/category/<category_id>")
