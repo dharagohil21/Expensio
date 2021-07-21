@@ -38,3 +38,17 @@ CREATE TABLE `income` (
     FOREIGN KEY (`user_id`)
     REFERENCES `user` (`id`)
 );
+
+CREATE TABLE `expense_category_limit` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `amount` INT NOT NULL,
+  `category_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `user_id_fk2`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `user` (`id`),
+  CONSTRAINT `category_id_fk`
+    FOREIGN KEY (`category_id`)
+    REFERENCES `expense_category` (`id`)
+);

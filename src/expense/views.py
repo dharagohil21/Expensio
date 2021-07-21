@@ -1,16 +1,16 @@
 """
-Author: Sravani Pinninti, Jaspreet Kaur Gill, Rushikesh Patel
+Author: Sravani Pinninti, Jaspreet Kaur Gill, Rushikesh Patel, Dharaben Gohil
 """
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 from marshmallow import ValidationError
 from flask import g
 from flask_restful import Resource, request, current_app
-from src.expense.schemas import ExpenseSchema, ExpenseListSchema, ExpenseCategorySchema
-from src.expense.models import Expense, ExpenseCategory
+from src.expense.schemas import ExpenseSchema, ExpenseListSchema, ExpenseCategorySchema, ExpenseCategoryLimitSchema
+from src.expense.models import Expense, ExpenseCategory, ExpenseCategoryLimit
 from src.utils.helpers import get_response_obj
 from sqlalchemy import and_
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from src.common.models import db
 from src.auth.api import AuthResource
 
@@ -213,8 +213,17 @@ class ExpenseCategoryListResource(AuthResource):
 
     def get(self):
         expense_categories = ExpenseCategory.query.all()
+        current_user = g.current_user
         schema = ExpenseCategorySchema()
-        return get_response_obj("Expense categories", data=schema.dump(expense_categories, many=True))
+        limits = ExpenseCategoryLimit.query.filter_by(user_id=current_user.id).all()
+        limits = ExpenseCategoryLimitSchema().dump(limits, many=True)
+        limits_map = {l["category_id"]: l for l in limits}
+
+        categories = schema.dump(expense_categories, many=True)
+        # add limits in category object
+        for category in categories:
+            category["limit"] = limits_map.get(category["id"], None)
+        return get_response_obj("Expense categories", data=categories)
 
     def post(self):
         schema = ExpenseCategorySchema()
@@ -260,3 +269,51 @@ class ExpenseCategoryResource(AuthResource):
             ), 500
 
         return get_response_obj("Expense category deleted", data=None ), 200
+
+
+class ExpenseCategoryLimitListResource(AuthResource):
+
+    def post(self):
+        schema = ExpenseCategoryLimitSchema()
+        current_user = g.current_user
+        try:
+            limit = schema.load(request.json or {}, session=db.session)
+        except ValidationError as e:
+            current_app.logger.exception("Invalid request params")
+            return get_response_obj("Invalid request params", error=e.messages), 422
+
+        limit.user_id = current_user.id
+        try:
+            limit.add()
+        except IntegrityError:
+            current_app.logger.exception("error addig limit")
+            return get_response_obj("Cannot add limit", error="Unknown category id"), 422
+        except SQLAlchemyError as e:
+            current_app.logger.exception("Error adding limit")
+            return get_response_obj("Server error while adding limit", error="Database error"), 500
+
+        return get_response_obj("Limit added", data=schema.dump(limit)), 200
+
+
+class ExpenseCategoryLimitResource(AuthResource):
+
+    def get(self, limit_id):
+        limit = ExpenseCategoryLimit.query.get(limit_id)
+        schema = ExpenseCategoryLimitSchema()
+        if not limit:
+            return get_response_obj("No limit found", error="No expense limit with given id"), 404
+
+        return get_response_obj("Limit found", data=schema.dump(limit)), 200
+
+    def delete(self, limit_id):
+        limit = ExpenseCategoryLimit.query.get(limit_id)
+        if not limit:
+            return get_response_obj("No limit found", error="No expense limit with given id"), 404
+
+        try:
+            limit.delete()
+        except SQLAlchemyError as e:
+            current_app.logger.exception("Error deleting limit")
+            return get_response_obj("Server error while deleting limit", error="Database error"), 500
+
+        return get_response_obj("Limit deleted", data=None), 200

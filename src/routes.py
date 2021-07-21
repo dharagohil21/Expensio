@@ -6,6 +6,8 @@ from src.expense.views import (
     ExpenseListResource,
     ExpenseCategoryResource,
     ExpenseCategoryListResource,
+    ExpenseCategoryLimitResource,
+    ExpenseCategoryLimitListResource,
 )
 from src.income.views import (
     IncomeResource,
@@ -28,6 +30,8 @@ expense_api.add_resource(ExpenseResource,"/<expense_id>")
 expense_api.add_resource(ExpenseListResource, "")
 expense_api.add_resource(ExpenseCategoryListResource, "/category")
 expense_api.add_resource(ExpenseCategoryResource, "/category/<category_id>")
+expense_api.add_resource(ExpenseCategoryLimitListResource, "/category/limit")
+expense_api.add_resource(ExpenseCategoryLimitResource, "/category/limit/<limit_id>")
 
 # income api endpoints
 income_bp = Blueprint("income_bp",__name__)
