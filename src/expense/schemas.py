@@ -1,11 +1,14 @@
+"""
+Author: Sravani Pinninti
+"""
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import fields, Schema
 from src.expense.models import Expense
 from datetime import date
 
 class ExpenseSchema(SQLAlchemyAutoSchema):
-    expense_id = fields.Integer(dump_only=True)
-    date = fields.Date(required=True)
+    id = fields.Integer(dump_only=True)
+    date = fields.Date(missing=date.today)
     user_id = fields.Integer(dump_only=True)
 
     class Meta:
