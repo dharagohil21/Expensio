@@ -1,13 +1,13 @@
 """
-Author: Sravani Pinninti, Jaspreet Kaur Gill
+Author: Sravani Pinninti, Jaspreet Kaur Gill, Rushikesh Patel
 """
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 from marshmallow import ValidationError
 from flask import g
 from flask_restful import Resource, request, current_app
-from src.expense.schemas import ExpenseSchema, ExpenseListSchema
-from src.expense.models import Expense
+from src.expense.schemas import ExpenseSchema, ExpenseListSchema, ExpenseCategorySchema
+from src.expense.models import Expense, ExpenseCategory
 from src.utils.helpers import get_response_obj
 from sqlalchemy import and_
 from sqlalchemy.exc import SQLAlchemyError
@@ -206,3 +206,56 @@ class ExpenseListResource(AuthResource):
             get_response_obj("expense list", data=expense_schema.dump(current_month_expenses, many=True)),
             200,
         )
+
+
+class ExpenseCategoryListResource(AuthResource):
+
+    def get(self):
+        expense_categories = ExpenseCategory.query.all()
+        schema = ExpenseCategorySchema()
+        return get_response_obj("Expense categories", data=schema.dump(expense_categories, many=True))
+
+    def post(self):
+        schema = ExpenseCategorySchema()
+        try:
+            category = schema.load(request.json or {}, session=db.session)
+        except ValidationError as e:
+            return get_response_obj(
+                "Cannot create an expense category. Invalid request data",
+                error=e.messages,
+            ), 422
+        try:
+            category.add()
+        except SQLAlchemyError as e:
+            current_app.logger.exception("Error creating expense category")
+            return (
+                get_response_obj(
+                    "Error creating an expense category, Server error",
+                    error="Server error",
+                ),
+                500,
+            )
+
+        return (
+            get_response_obj("Expense category created", data=schema.dump(category)),
+            200,
+        )
+
+
+class ExpenseCategoryResource(AuthResource):
+
+    def delete(self, category_id):
+        category = ExpenseCategory.query.get(category_id)
+        if not category:
+            return get_response_obj("No expenses category found", error="No category with given id"), 404
+
+        try:
+            category.delete()
+        except SQLAlchemyError as e:
+            current_app.logger.exception("Error deleting expense category")
+            return get_response_obj(
+                "Server error while deleting expense category",
+                error="Database error",
+            ), 500
+
+        return get_response_obj("Expense deleted", data=None ), 200

@@ -17,3 +17,10 @@ class Expense(BaseModel):
     expense_category = Column(String(100), nullable=False)
     is_recurring = Column(Boolean, nullable=True, default=False)
     date = Column(DATE, nullable=False)
+
+
+class ExpenseCategory(BaseModel):
+    __tablename__ = "expense_category"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False)

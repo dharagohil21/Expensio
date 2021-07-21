@@ -19,3 +19,8 @@ CREATE TABLE `expense` (
     FOREIGN KEY (`user_id`)
     REFERENCES `user` (`id`)
 );
+
+CREATE TABLE `expense_category` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id`));

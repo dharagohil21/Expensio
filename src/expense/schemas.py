@@ -3,7 +3,7 @@ Author: Sravani Pinninti
 """
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import fields, Schema
-from src.expense.models import Expense
+from src.expense.models import Expense, ExpenseCategory
 from datetime import date
 
 class ExpenseSchema(SQLAlchemyAutoSchema):
@@ -20,3 +20,13 @@ class ExpenseSchema(SQLAlchemyAutoSchema):
 
 class ExpenseListSchema(Schema):
     date = fields.Date(required=False, missing=date.today)
+
+
+class ExpenseCategorySchema(SQLAlchemyAutoSchema):
+    id = fields.Integer(dump_only=True)
+
+    class Meta:
+        model = ExpenseCategory
+        include_relationships = False
+        include_fk = True
+        load_instance = True
