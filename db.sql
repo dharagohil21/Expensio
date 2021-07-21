@@ -19,3 +19,17 @@ CREATE TABLE `expense` (
     FOREIGN KEY (`user_id`)
     REFERENCES `user` (`id`)
 );
+
+CREATE TABLE `income` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `title` VARCHAR(100) NULL,
+  `amount` FLOAT NOT NULL,
+  `income_category` VARCHAR(100) NOT NULL,
+  `is_recurring` TINYINT NOT NULL DEFAULT 0,
+  `date` DATE NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `income_user_id_fk`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `user` (`id`)
+);
