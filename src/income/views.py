@@ -44,7 +44,7 @@ class IncomeResource(AuthResource):
                     Income.date >= next_month_start,
                     Income.amount == income.amount,
                     Income.income_category == income.income_category,
-                    Income.is_recurring == True,
+                    Income.title == income.title,
                 )
             ).delete()
             income.delete()
@@ -94,7 +94,7 @@ class IncomeResource(AuthResource):
                             Income.date >= next_month_start,
                             Income.amount == income.amount,
                             Income.income_category == income.income_category,
-                            Income.is_recurring == True,
+                            Income.title == income.title
                         )
                     ).delete()
             income.update()
