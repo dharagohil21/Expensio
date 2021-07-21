@@ -169,7 +169,8 @@ class ExpenseListResource(AuthResource):
                 and_(
                     Expense.date >= start_date + relativedelta(months=-1),
                     Expense.date < start_date,
-                    Expense.is_recurring == True
+                    Expense.is_recurring == True,
+                    Expense.user_id == current_user.id
                 )
             ).all()
             new_expenses = list()

@@ -139,6 +139,8 @@ class IncomeListResource(AuthResource):
         )
 
     def get(self):
+        import pdb;
+        pdb.set_trace()
         current_user = g.current_user
         income_schema = IncomeSchema()
         try:
@@ -168,7 +170,8 @@ class IncomeListResource(AuthResource):
                 and_(
                     Income.date >= start_date + relativedelta(months=-1),
                     Income.date < start_date,
-                    Income.is_recurring == True
+                    Income.is_recurring == True,
+                    Income.user_id == current_user.id
                 )
             ).all()
             new_incomes = list()
