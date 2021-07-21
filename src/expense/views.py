@@ -179,7 +179,7 @@ class ExpenseListResource(AuthResource):
                         e for e in current_month_expenses
                         if e.amount == exp.amount
                         and e.expense_category == exp.expense_category
-                        and e.is_recurring is True
+                        and e.title == exp.title
                     ),
                     None,
                 )
