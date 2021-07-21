@@ -1,8 +1,16 @@
 """
-Author: Sravani Pinninti
+Author: Sravani Pinninti, Rushikesh Patel, Dharaben Gohil
 """
 from src.common.models import BaseModel
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Float
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    ForeignKey,
+    Boolean,
+    Float,
+)
+from src.common.models import db
 from sqlalchemy.dialects.mysql import DATE
 from src.users.models import User
 
@@ -24,3 +32,15 @@ class ExpenseCategory(BaseModel):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
+
+
+class ExpenseCategoryLimit(BaseModel):
+    __tablename__ = "expense_category_limit"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey(User.id), nullable=False)
+    amount = Column(Float, nullable=False)
+    category_id = Column(Integer, ForeignKey(ExpenseCategory.id), nullable=False)
+
+    category = db.relationship(ExpenseCategory, backref="limit")
+    user = db.relationship(User, backref="expense_limits")
