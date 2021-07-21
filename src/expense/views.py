@@ -144,6 +144,7 @@ class ExpenseListResource(AuthResource):
             current_app.logger.exception("Invalid request params")
             return get_response_obj("Invalid request params", error=e.messages), 422
 
+        # create two dates representing first and last date of requested month
         start_date = date(req_args["date"].year, req_args["date"].month, 1)
         next_month_date = start_date + relativedelta(months=1)
         end_date = date(next_month_date.year, next_month_date.month, 1)
