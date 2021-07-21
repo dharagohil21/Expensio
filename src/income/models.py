@@ -1,5 +1,5 @@
 """
-Author: Nachiket Panchal
+Author: Nachiket Panchal, Rushikesh Patel
 """
 from src.common.models import BaseModel
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Float

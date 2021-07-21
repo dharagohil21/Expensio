@@ -1,3 +1,6 @@
+"""
+Author: Rushikesh Patel
+"""
 from flask import g, request, current_app
 from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
 from src.users.models import User

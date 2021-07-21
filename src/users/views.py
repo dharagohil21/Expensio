@@ -1,3 +1,6 @@
+"""
+Author: Rushikesh Patel
+"""
 from hashlib import sha1
 from marshmallow import ValidationError
 from flask_restful import Resource, request, current_app

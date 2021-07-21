@@ -1,3 +1,6 @@
+"""
+Author: Rushikesh Patel, Sravani Pinninti, Jaspreet Kaur Gill, Nachiket Panchal, Dharaben Gohil
+"""
 from flask import Blueprint
 from flask_restful import Api
 from src.users.views import UserResource, CreateUserResource, LoginResource
