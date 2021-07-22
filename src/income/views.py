@@ -139,8 +139,6 @@ class IncomeListResource(AuthResource):
         )
 
     def get(self):
-        import pdb;
-        pdb.set_trace()
         current_user = g.current_user
         income_schema = IncomeSchema()
         try:
