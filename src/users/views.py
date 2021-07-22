@@ -43,6 +43,10 @@ class CreateUserResource(Resource):
 
         # hash password
         user.password = sha1(user.password.encode()).hexdigest()
+        existing_user = User.query.filter_by(email=user.email).first()
+        if existing_user:
+            return get_response_obj("Cannot signup. User exists with given email", error="Duplicate email"), 422
+
         try:
             user.add()
         except SQLAlchemyError as e:
