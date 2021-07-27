@@ -19,6 +19,8 @@ from src.income.views import (
     IncomeCategoryListResource,
 )
 
+from src.stats.views import DashBoardApi
+
 # user api endpoints
 user_bp = Blueprint("user_bp", __name__)
 user_api = Api(user_bp)
@@ -38,8 +40,13 @@ expense_api.add_resource(ExpenseCategoryLimitResource, "/category/limit/<limit_i
 
 # income api endpoints
 income_bp = Blueprint("income_bp",__name__)
-income_api=Api(income_bp)
+income_api = Api(income_bp)
 income_api.add_resource(IncomeResource,"/<income_id>")
 income_api.add_resource(IncomeListResource, "")
 income_api.add_resource(IncomeCategoryListResource, "/category")
 income_api.add_resource(IncomeCategoryResource, "/category/<category_id>")
+
+# stats endpoints
+stats_bp = Blueprint("stats_bp", __name__)
+stats_api = Api(stats_bp)
+stats_api.add_resource(DashBoardApi, "/dashboard")
