@@ -19,7 +19,7 @@ from src.income.views import (
     IncomeCategoryListResource,
 )
 
-from src.stats.views import DashBoardApi
+from src.stats.views import DashBoardApi, StatGraphApi
 
 # user api endpoints
 user_bp = Blueprint("user_bp", __name__)
@@ -50,3 +50,4 @@ income_api.add_resource(IncomeCategoryResource, "/category/<category_id>")
 stats_bp = Blueprint("stats_bp", __name__)
 stats_api = Api(stats_bp)
 stats_api.add_resource(DashBoardApi, "/dashboard")
+stats_api.add_resource(StatGraphApi, "/graph")
