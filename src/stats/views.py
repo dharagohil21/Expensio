@@ -83,7 +83,7 @@ class DashBoardApi(AuthResource):
 
         total_expense = self.calc_expense_total(start_date, end_date)
         resp_data["remaining_expense_limit"] = (
-            resp_data["total_expense_limit"] - total_expense
+            abs(resp_data["total_expense_limit"] - total_expense)
         )
 
         resp_data["total_income"] = self.calc_total_income(start_date, end_date)
