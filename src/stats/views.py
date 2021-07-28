@@ -172,11 +172,11 @@ class StatGraphApi(AuthResource):
             prev_month_expense_stat["0"], prev_month_expense_stat["8"],
             prev_month_expense_stat["15"], prev_month_expense_stat["22"],
         ]
-        resp_data["current_month_expense"] = [
+        resp_data["current_month_income"] = [
             current_month_income_stat["0"], current_month_income_stat["8"],
             current_month_income_stat["15"], current_month_income_stat["22"],
         ]
-        resp_data["prev_month_expense"] = [
+        resp_data["prev_month_income"] = [
             prev_month_income_stat["0"], prev_month_income_stat["8"],
             prev_month_income_stat["15"], prev_month_income_stat["22"],
         ]
