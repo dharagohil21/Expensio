@@ -1,6 +1,8 @@
 # Expensio (Online Expense Management Platform)
 
 The aim of Expensio is to promote better financial planning by providing users an easy-touse platform that makes expense tracking easier and non-frustrating. Expensio will enable users to categorize their incomes and expenses so that they can identify the expenses that they can cut down on. Apart from the monthly reports Expensio also provide interactive visualizations that will provide users with a better understanding of the cash flow.
+<br/>
+This project is the backend of the expensio-platform.
 
 -   _Date Created_: 07 JUNE 2021
 -   _Last Modification Date_: 31 JULY 2021
